@@ -1,0 +1,26 @@
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  resource: internet:website
+  version: default
+  rules:
+    - actions:
+        - access
+      effect: EFFECT_ALLOW
+      roles:
+        - proxy_url_ubuntu_update
+      condition:
+        match: 
+          any: 
+            of: 
+              - expr: request.resource.attr.domain == "*.archive.ubuntu.com"
+              - expr: request.resource.attr.domain == "security.ubuntu.com"
+    - actions:
+        - access
+      effect: EFFECT_ALLOW
+      roles:
+        - proxy_url_api_hopital
+      condition:
+        match: 
+          any: 
+            of: 
+              - expr: request.resource.attr.domain == "*.api.site.hopital.fr"

@@ -1,0 +1,31 @@
+resources:
+  siteUbuntuUpdateArchive:
+    kind: internet:website
+    id: -://archive.ubuntu.com-
+    attr:
+      domain: "*.archive.ubuntu.com"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+
+  siteUbuntuUpdateSecurity:
+    kind: internet:website
+    id: -://security.ubuntu.com-
+    attr:
+      domain: "security.ubuntu.com"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+    
+  siteApiHopital:
+    kind: internet:website
+    id: -://api.site.hopital.fr-
+    attr:
+      domain: "*.api.site.hopital.fr"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+

@@ -1,0 +1,116 @@
+name: Example test suite
+
+# You can define principal fixtures in the test suite as below, but extracting
+# them to a `testdata/principals.yaml` file allows you to reuse them in other
+# test suites and in the playground's "Explore" pane.
+principals:
+  ServerUbuntu:
+    id: ServerUbuntu
+    roles:
+      - proxy_url_ubuntu_update
+    attr:
+      client_ip: "10.0.0.203"
+      client_hostname: "ip-10-0-0-203.eu-west-2.compute.internal"
+
+  ServerHopital:
+    id: ServerHopital
+    roles:
+      - proxy_url_api_hopital
+      - proxy_url_ubuntu_update
+    attr:
+      client_ip: "10.0.0.204"
+      client_hostname: "ip-10-0-0-204.eu-west-2.compute.internal"
+
+
+# Similarly, you can define resource fixtures here, or extract them to a
+# `testdata/resources.yaml` file.
+resources:
+  siteUbuntuUpdateArchive:
+    kind: internet:website
+    id: -://archive.ubuntu.com-
+    attr:
+      domain: "*.archive.ubuntu.com"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+
+  siteUbuntuUpdateSecurity:
+    kind: internet:website
+    id: -://security.ubuntu.com-
+    attr:
+      domain: "security.ubuntu.com"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+    
+  siteApiHopital:
+    kind: internet:website
+    id: -://api.site.hopital.fr-
+    attr:
+      domain: "*.api.site.hopital.fr"
+      proto: "-"
+      port: "443"
+      path: "-"
+      method: "CONNECT"
+
+
+tests:
+  - name: Update Ubuntu Allow (Archive)
+    input:
+      principals:
+        - ServerUbuntu
+      resources:
+        - siteUbuntuUpdateArchive
+      actions:
+        - access
+    expected:
+      - principal: ServerUbuntu
+        resource: siteUbuntuUpdateArchive
+        actions:
+          access: EFFECT_ALLOW
+
+  - name: Update Ubuntu Allow (Security)
+    input:
+      principals:
+        - ServerUbuntu
+      resources:
+        - siteUbuntuUpdateSecurity
+      actions:
+        - access
+    expected:
+      - principal: ServerUbuntu
+        resource: siteUbuntuUpdateSecurity
+        actions:
+          access: EFFECT_ALLOW
+
+  - name: Access API Hopital Allow
+    input:
+      principals:
+        - ServerHopital
+      resources:
+        - siteApiHopital
+      actions:
+        - access
+    expected:
+      - principal: ServerHopital
+        resource: siteApiHopital
+        actions:
+          access: EFFECT_ALLOW
+
+  - name: Access from Ubuntu API Hopital (Deny)
+    input:
+      principals:
+        - ServerUbuntu
+      resources:
+        - siteApiHopital
+      actions:
+        - access
+    expected:
+      - principal: ServerUbuntu
+        resource: siteApiHopital
+        actions:
+          access: EFFECT_DENY
+
+        
